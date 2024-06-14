@@ -1,16 +1,31 @@
-import express from "express";
-import { Server, Server, Server } from "socket.io";
+import mongoose from "mongoose";
+
+import dotenv from "dotenv"
+import {app} from "./app.js"
 
 
-const app = express();
-const Server = new Server();
+dotenv.config({
+    path:"./.env"
+})
 
-app.get("/" , (req,res)=>{
-    res.send("server is ready");
-});
 
-const port = process.env.PORT || 3000
+const db_name = "messagebro";
 
-app.listen(port , ()=>{
-    console.log("server is ready at 3000")
-});
+const connectdb = async()=>{
+    try{
+        const connectionInstances = await mongoose.connect(`${process.env.MONGODB_URI}/${db_name}`)
+        console.log(`connected to database bro ${connectionInstances}`)
+    }
+    catch(error){
+        console.log("connection error" , error)
+    }
+}
+
+connectdb().then(()=>{
+    const PORT = process.env.PORT || 9000;
+    app.listen(PORT || 9000, ()=>{
+        console.log(`server running at port ${process.env.PORT}`);
+    })
+}).catch((error)=>{
+    console.log("mongodb conn fail");
+})
