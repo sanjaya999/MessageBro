@@ -43,16 +43,17 @@ const userSchema = new Schema({
     timestamps: true
 })
 
-
+//encrypt password with bcrypt
 userSchema.pre("save" , async function(next){
     if(this.isModified("password")){
-        this.password = await bcrypt.hash(this.passwrod , 5)
+        this.password = await bcrypt.hash(this.password,5)
     }
     else{
         next();
     }
 })
 
+//compare encrypted password
 userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password , this.password)
 }
@@ -69,6 +70,7 @@ userSchema.methods.generateAccessToken = function(){
         expiresIn : process.env.ACCESS_TOKEN_EXPIRY
     })
 }
+
 
 userSchema.methods.generateRefreshToken = function(){
     return jwt.sign({
