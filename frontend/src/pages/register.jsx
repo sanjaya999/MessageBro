@@ -3,17 +3,17 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext.jsx';
 
 const Register = () => {
-  const { registerInfo, updateRegisterInfo } = useContext(AuthContext);
-  const [name, setName] = useState('');
+  const { registerInfo, updateRegisterInfo,isRegisterLoading ,registerUser ,registerError} = useContext(AuthContext);
+  const [userName, setuserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    updateRegisterInfo({ name, email, password });
-  }, [name, email, password]);
+    updateRegisterInfo({ userName, email, password });
+  }, [userName, email, password]);
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    setuserName(e.target.value);
   };
 
   const handleEmailChange = (e) => {
@@ -24,23 +24,27 @@ const Register = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setName('');
-    setEmail('');
-    setPassword('');
+    await registerUser();
+    if (!registerError) {
+      setuserName('');
+      setEmail('');
+      setPassword('');
+    }
   };
 
   return (
     <div>
       <h2>Register</h2>
+      {registerError && <p style={{color: 'red'}}>{registerError}</p>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="name">Name:</label>
+          <label htmlFor="name">userName:</label>
           <input
             type="text"
             id="name"
-            value={name}
+            value={userName}
             onChange={handleNameChange}
             required
           />
@@ -66,7 +70,7 @@ const Register = () => {
             required
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit">{isRegisterLoading? "creating account":"register"}</button>
       </form>
     </div>
   );
