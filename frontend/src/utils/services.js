@@ -7,13 +7,20 @@ export const postReq = async (url, body, config = {}) => {
     const response = await axios.post(url, body, {
       headers: {
         'Content-Type': 'application/json',
-        ...config.headers, // Merge any custom headers
+        ...config.headers, 
       },
-      ...config, // Spread any additional config settings
+      ...config, 
     });
-    return response.data;
+    if (response.status >= 200 && response.status < 300) {
+      return { ok: true, data: response.data };
+    } else {
+      return { ok: false, error: response.data.message || 'Request failed' };
+    }
   } catch (error) {
-    console.error('Cannot make post request', error);
-    throw error; // Re-throw the error to handle it in the calling code
+    console.error('Cannot make post request', error.response || error);
+    return { 
+      ok: false, 
+      error: error.response?.data?.message || error.message || 'An error occurred' 
+    };
   }
 };
