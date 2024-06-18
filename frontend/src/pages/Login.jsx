@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React, { useContext, useState,useEffect } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 
 const Login = () => {
+  const {loginError,
+    isloginLoading,
+    loginUser,
+    updateloginInfo,
+    loginInfo} = useContext(AuthContext)
+
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  useEffect(() => {
+    updateloginInfo({  email, password });
+  }, [ email, password]);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -13,17 +24,21 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async(e) => {
     e.preventDefault();
-    // Perform login logic here
+    
+    await loginUser();
+    if (!loginError) {
+      setEmail('');
+      setPassword('');
+    }
     console.log('Email:', email);
     console.log('Password:', password);
-    // Reset form fields after submission
-    setEmail('');
-    setPassword('');
+        
   };
 
   return (
+
     <div>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
