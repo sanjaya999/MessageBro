@@ -25,8 +25,12 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 import router from "./routes/user.routes.js"
+import crouter from "./routes/chat.routes.js"
+import mrouter from "./routes/message.route.js";
 
 app.use("/api/v1/user",router)
+app.use("/api/v1/chat",crouter)
+app.use("/api/v1/message",mrouter)
 
 
 
