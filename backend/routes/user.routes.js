@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { registerUser , loginUser, findUser,getallUsers} from "../controllers/user.controller.js";
+import { createChat ,findUserChats,findChats} from "../controllers/chat.controller.js";
 
 
 
@@ -10,6 +11,7 @@ router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/find/:userId").get(findUser);
 router.route("/findall").get(getallUsers)
+
 
 
 
