@@ -1,8 +1,22 @@
 import React from 'react'
+import UserArea from './UserArea'
+import Message from './Message.jsx'
+
 
 function Chat() {
   return (
-    <div>Chat</div>
+    <>
+      <h1>Chat</h1>
+      <div className="Message">
+         <Message />
+      </div>
+
+      <div className="userarea">
+        <UserArea />
+      </div>
+    
+    </>
+   
   )
 }
 
