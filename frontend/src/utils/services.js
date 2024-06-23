@@ -11,7 +11,7 @@ export const postReq = async (url, body, config = {}) => {
       },
       ...config, 
     });
-    if (response.status >= 200 && response.status < 300) {
+    if (response.status >= 200 ) {
       return { ok: true, data: response.data };
     } else {
       return { ok: false, error: response.data.message || 'Request failed' };
@@ -24,3 +24,24 @@ export const postReq = async (url, body, config = {}) => {
     };
   }
 };
+
+
+export const getReq = async(url , body , config={})=>{
+
+  try {
+    const response = await axios.get(url)
+    const data = await response.data;
+    if (response.status >= 200 ) {
+      return { ok: true, data: response.data };
+    } else {
+      return { ok: false, error: response.data.message || 'Request failed' };
+    }
+  } catch (error) {
+    console.error('Cannot make get request', error.response || error);
+    return { 
+      ok: false, 
+      error: error.response?.data?.message || error.message || 'An error occurred' 
+    };
+  }
+
+}
