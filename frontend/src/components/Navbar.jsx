@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from "../context/AuthContext";
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
@@ -18,10 +18,14 @@ function Navbar() {
             {user ? (
               <>
                 <li className="username">
-                  <span className='UserName'>{user.data.userName || user.data.user.userName}</span>
+                  <span className="UserName">
+                    {user.data.userName || user.data.user.userName}
+                  </span>
                 </li>
                 <li className="logout">
-                  <button className="welogout"onClick={logout}>Logout</button>
+                  <button className="welogout" onClick={logout}>
+                    Logout
+                  </button>
                 </li>
               </>
             ) : (
