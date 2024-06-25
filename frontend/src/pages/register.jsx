@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext.jsx';
+import React, { useState, useEffect } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext.jsx";
+import { NavLink } from "react-router-dom";
 
 const Register = () => {
-  const { registerInfo, updateRegisterInfo,isRegisterLoading ,registerUser ,registerError} = useContext(AuthContext);
-  const [userName, setuserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const {
+    registerInfo,
+    updateRegisterInfo,
+    isRegisterLoading,
+    registerUser,
+    registerError,
+  } = useContext(AuthContext);
+  const [userName, setuserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     updateRegisterInfo({ userName, email, password });
@@ -28,20 +35,21 @@ const Register = () => {
     e.preventDefault();
     await registerUser();
     if (!registerError) {
-      setuserName('');
-      setEmail('');
-      setPassword('');
+      setuserName("");
+      setEmail("");
+      setPassword("");
     }
   };
 
   return (
-    <div>
+    <div className="loginpage">
       <h2>Register</h2>
-      {registerError && <p style={{color: 'red'}}>{registerError}</p>}
+      {registerError && <p style={{ color: "red" }}>{registerError}</p>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="name">userName:</label>
+          <label htmlFor="name">Username:</label>
           <input
+            className="inputemail"
             type="text"
             id="name"
             value={userName}
@@ -49,10 +57,13 @@ const Register = () => {
             required
           />
         </div>
-        
+
         <div>
-          <label htmlFor="email">Email:</label>
+          <label className="email" htmlFor="email">
+            Email:
+          </label>
           <input
+            className="inputemail"
             type="email"
             id="email"
             value={email}
@@ -61,8 +72,11 @@ const Register = () => {
           />
         </div>
         <div>
-          <label htmlFor="password">Password:</label>
+          <label className="password" htmlFor="password">
+            Password:
+          </label>
           <input
+            className="inputpassword"
             type="password"
             id="password"
             value={password}
@@ -70,7 +84,15 @@ const Register = () => {
             required
           />
         </div>
-        <button type="submit">{isRegisterLoading? "creating account":"register"}</button>
+        <button className="loginsubmit">
+          {isRegisterLoading ? "creating account" : "register"}
+        </button>
+        <p className="ra">
+          Already have an account?{" "}
+          <NavLink className="linkto" to="login">
+            Login
+          </NavLink>
+        </p>
       </form>
     </div>
   );
