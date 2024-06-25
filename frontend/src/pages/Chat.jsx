@@ -35,7 +35,7 @@ function Chat() {
       <div className='box'>
         <div className='box-header'>
           <div className='recent'>
-            <form onSubmit={handleSubmit}>
+            <form  className="search-form" onSubmit={handleSubmit}>
               <input
                 type="text"
                 className='find-users'
@@ -46,7 +46,7 @@ function Chat() {
               <button type='submit' className='search-button'>Search</button>
             </form>
             
-            {/* Search Results */}
+          
             {searchResults.length > 0 && (
               <div className="search-results">
                 {searchResults.map((result, index) => (
