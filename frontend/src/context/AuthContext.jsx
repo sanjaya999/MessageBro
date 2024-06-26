@@ -43,16 +43,11 @@ export const AuthContextProvider = ({ children }) => {
     try {
       const response = await postReq(
         `${baseUrl}/register`,
-        JSON.stringify(registerInfo)
+        registerInfo
       );
       console.log(response);
 
-      if (response.ok) {
-        setUser(response.data);
-        localStorage.setItem("user", JSON.stringify(response.data));
-      } else {
-        setloginError(response.error || "Registration failed");
-      }
+     
     } catch (error) {
       console.error("Registration error:", error);
       setloginError(error.message || "An error occurred during registration");
@@ -68,7 +63,7 @@ export const AuthContextProvider = ({ children }) => {
     try {
       const response = await postReq(
         `${baseUrl}/login`,
-        JSON.stringify(loginInfo)
+        loginInfo
       );
       console.log(response);
 
