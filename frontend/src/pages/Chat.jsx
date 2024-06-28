@@ -8,9 +8,9 @@ import { postReq, baseUrl } from '../utils/services.js'
 
 function Chat() {
   const { user } = useContext(AuthContext)
-  const { userChats, isuserChatsLoading, userChatError } = useContext(ChatContext)
+  const { userChats, isUserChatLoading, userChatError, createChat } = useContext(ChatContext)
   const [searchInput, setSearchInput] = useState('');
-  const [searchResults, setSearchResults] = useState([]); // Change to array for multiple results
+  const [searchResults, setSearchResults] = useState([]);
 
   console.log("these are user chats", userChats);
 
@@ -28,14 +28,34 @@ function Chat() {
     }
   };
 
-  console.log("this is searchresult" , searchResults);
+  const handleAddUser = async (secondId) => {
+    
+      const firstId = user?.data.user._id;
+      console.log("1st and second are" , firstId , secondId);
+      if (firstId && secondId) {
+        const newChat = await createChat(firstId, secondId);
+        if (newChat) {
+          console.log("New chat created:", newChat);
+          setSearchResults([]);
+          setSearchInput('');
+        } else {
+          console.log("Failed to create new chat");
+        }
+      } else {
+        console.error("Missing user IDs for chat creation");
+      }
+    
+  };
+
+  console.log("this is searchresult", searchResults);
+
   return (
     <>
       <h1>Chat</h1>
       <div className='box'>
         <div className='box-header'>
           <div className='recent'>
-            <form  className="search-form" onSubmit={handleSubmit}>
+            <form className="search-form" onSubmit={handleSubmit}>
               <input
                 type="text"
                 className='find-users'
@@ -46,15 +66,20 @@ function Chat() {
               <button type='submit' className='search-button'>Search</button>
             </form>
             
-          
             {searchResults.length > 0 && (
               <div className="search-results">
                 {searchResults.map((result, index) => (
                   <div key={index} className="search-result-item">
                     <div className="user-info">
                       <h3>{result.data.userName}</h3>
+                      <h1>{result.data._id}</h1>
                     </div>
-                    <button className="add-user-btn">Add User</button>
+                    <button 
+                      className="add-user-btn" 
+                      onClick={() => handleAddUser(result.data._id)}
+                    >
+                      Add User
+                    </button>
                   </div>
                 ))}
               </div>
@@ -63,7 +88,7 @@ function Chat() {
             <div className='recent-section'>
               <h2>Recent</h2>
             </div>
-            {isuserChatsLoading && <p>Loading ..</p>}
+            {isUserChatLoading && <p>Loading ..</p>}
             {userChats?.data.map((chat, index) => (
               <div key={index}>
                 <UserChat chat={chat} user={user} />
@@ -75,7 +100,9 @@ function Chat() {
             <div className='message-section'>
               <h2>Message</h2>
             </div>
-            <h3>chatting section here</h3>
+            <h3>
+             
+            </h3>
           </div>
         </div>
       </div>
