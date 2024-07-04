@@ -1,47 +1,93 @@
-import { createContext, useState, useEffect } from "react";
-import { baseUrl, getReq, postReq } from "../utils/services.js";
+import { createContext, useState, useEffect, useCallback } from "react";
+import { messageUrl, chatUrl, baseUrl, getReq, postReq } from "../utils/services.js";
 
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children, user }) => {
-  const [userChats, setuserChats] = useState(null);
-  const [isuserChatLoading, setisuserChatLoading] = useState(false);
-  const [userChatError, setuserChatError] = useState(null);
-  const [thischat, setthischat] = useState(null);
+  const [userChats, setUserChats] = useState();
+  const [isUserChatLoading, setIsUserChatLoading] = useState(false);
+  const [userChatError, setUserChatError] = useState(null);
+  const [thisChat, setThisChat] = useState([]);
 
   useEffect(() => {
-    const getchats = async () => {
+    const getChats = async () => {
       const response = await getReq(`${baseUrl}/findall`);
-      console.log("this is getchats", response);
+      console.log("this is getChats", response);
     };
-    getchats();
+    getChats();
   }, []);
 
   useEffect(() => {
     const getUserChats = async () => {
-      let userID = user?.data.user._id;
+      const userID = user?.data.user._id;
+      console.log("this is chatContext ID", userID);
+
       if (userID) {
-        setisuserChatLoading(true);
-        setuserChatError(null);
-        console.log("this is chatcontext id ", user?.data.user._id);
+        setIsUserChatLoading(true);
+        setUserChatError(null);
         const response = await getReq(
-          `http://localhost:9001/api/v1/chat/finduserchat/${userID}`
+          `${chatUrl}/finduserchat/${userID}`
         );
-        console.log("this is response in chatcontext", response);
-        setisuserChatLoading(false);
+        console.log("this is response in chatContext", response);
+        setIsUserChatLoading(false);
 
         if (response.error) {
-          return setuserChatError(response.data);
+          return setUserChatError(response.data);
         }
-        setuserChats(response.data);
+
+        setUserChats(response.data);
       }
     };
     getUserChats();
   }, [user]);
 
+  useEffect(() => {
+    const getUsers = async () => {
+      if (userChats) {
+        const response = await getReq(
+          `${baseUrl}/findall`
+        );
+        if (response.error) {
+          return console.log("error", response);
+        }
+        console.log("yo chai userChat hereko", userChats.data);
+        console.log("getUserBhitra", response.data.data);
+        const pchats = response.data.data?.filter((u) => {
+          let isChatCreated = false;
+          if (userChats) {
+            isChatCreated = userChats.data?.some((chat) => {
+              return chat.members[0] === u._id || chat.members[1] === u._id;
+            });
+          }
+          return !isChatCreated;
+        });
+        setThisChat(pchats);
+      }
+    };
+
+    if (userChats) {
+      getUsers();
+    }
+  }, [userChats]);
+
+  const createChat = useCallback(async (firstId, secondId) => {
+    try {
+      const response = await postReq(
+        `${chatUrl}/createchat`, JSON.stringify({
+          firstId,
+          secondId
+        })
+      );
+
+      setUserChats((prev)=>[...prev.data , response]);
+    } catch (error) {
+      console.log("error occurred", error);
+    }
+  }, []);
+
   return (
     <ChatContext.Provider
-      value={{ userChats, userChatError, isuserChatLoading }}
+      value={{ userChats, createChat, userChatError, isUserChatLoading, thisChat }}
     >
       {children}
     </ChatContext.Provider>
