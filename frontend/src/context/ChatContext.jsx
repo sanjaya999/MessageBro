@@ -4,8 +4,8 @@ import { messageUrl, chatUrl, baseUrl, getReq, postReq } from "../utils/services
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children, user }) => {
-  const [userChats, setUserChats] = useState();
-  const [isUserChatLoading, setIsUserChatLoading] = useState(false);
+  const [userChats, setUserChats] = useState({ data: [] });
+    const [isUserChatLoading, setIsUserChatLoading] = useState(false);
   const [userChatError, setUserChatError] = useState(null);
   const [thisChat, setThisChat] = useState([]);
 
@@ -48,8 +48,6 @@ export const ChatContextProvider = ({ children, user }) => {
         if (response.error) {
           return console.log("error", response);
         }
-        console.log("userChats:", JSON.stringify(userChats, null, 2));
-        console.log("response.data:", JSON.stringify(response.data, null, 2));
   
         const pchats = response.data.data?.filter((u) => {
           let isChatCreated = false;
@@ -81,7 +79,6 @@ export const ChatContextProvider = ({ children, user }) => {
         })
       );
   
-      console.log("Create chat response:", JSON.stringify(response, null, 2));
   
       const newChat = response.data.data; // The actual chat object is in response.data.data
   
