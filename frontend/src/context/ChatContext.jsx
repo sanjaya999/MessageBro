@@ -8,6 +8,12 @@ export const ChatContextProvider = ({ children, user }) => {
     const [isUserChatLoading, setIsUserChatLoading] = useState(false);
   const [userChatError, setUserChatError] = useState(null);
   const [thisChat, setThisChat] = useState([]);
+  const [currentchat , setcurrentchat] = useState(null)
+  const [message, setmessage] = useState();
+  const [messageError, setmessageError] = useState();
+
+console.log("currentchat", currentchat);
+
 
   useEffect(() => {
     const getChats = async () => {
@@ -70,6 +76,13 @@ export const ChatContextProvider = ({ children, user }) => {
       getUsers();
     }
   }, [userChats]);
+
+
+  const updatecurrentchat = useCallback((chat)=>{
+    setcurrentchat(chat)
+  },[])
+
+
   const createChat = useCallback(async (firstId, secondId) => {
     try {
       const response = await postReq(
@@ -94,9 +107,11 @@ export const ChatContextProvider = ({ children, user }) => {
     }
   }, []);
 
+
+
   return (
     <ChatContext.Provider
-      value={{ userChats, createChat, userChatError, isUserChatLoading, thisChat }}
+      value={{ userChats,updatecurrentchat, createChat, userChatError, isUserChatLoading, thisChat }}
     >
       {children}
     </ChatContext.Provider>
