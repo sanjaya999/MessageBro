@@ -8,7 +8,7 @@ import { postReq, baseUrl } from '../utils/services.js'
 
 function Chat() {
   const { user } = useContext(AuthContext)
-  const { userChats, isUserChatLoading, userChatError, createChat } = useContext(ChatContext)
+  const { userChats,updatecurrentchat, isUserChatLoading, userChatError, createChat } = useContext(ChatContext)
   const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
@@ -88,7 +88,7 @@ function Chat() {
 </div>
 {isUserChatLoading && <p>Loading ..</p>}
 {userChats?.data?.map((chat, index) => (
-  <div key={chat._id || index}>
+  <div key={chat._id || index} onClick={()=>updatecurrentchat(chat)}>
     <UserChat chat={chat} user={user} />
   </div>
 ))}
