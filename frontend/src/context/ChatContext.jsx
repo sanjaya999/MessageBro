@@ -44,19 +44,22 @@ export const ChatContextProvider = ({ children, user }) => {
   useEffect(() => {
     const getUsers = async () => {
       if (userChats) {
-        const response = await getReq(
-          `${baseUrl}/findall`
-        );
+        const response = await getReq(`${baseUrl}/findall`);
         if (response.error) {
           return console.log("error", response);
         }
-        console.log("yo chai userChat hereko", userChats.data);
-        console.log("getUserBhitra", response.data.data);
+        console.log("userChats:", JSON.stringify(userChats, null, 2));
+        console.log("response.data:", JSON.stringify(response.data, null, 2));
+  
         const pchats = response.data.data?.filter((u) => {
           let isChatCreated = false;
-          if (userChats) {
-            isChatCreated = userChats.data?.some((chat) => {
-              return chat.members[0] === u._id || chat.members[1] === u._id;
+          if (userChats && userChats.data) {
+            isChatCreated = userChats.data.some((chat) => {
+              if (!chat || !chat.members) {
+                console.log("Chat without members:", chat);
+                return false;
+              }
+              return chat.members.includes(u._id);
             });
           }
           return !isChatCreated;
@@ -64,12 +67,11 @@ export const ChatContextProvider = ({ children, user }) => {
         setThisChat(pchats);
       }
     };
-
+  
     if (userChats) {
       getUsers();
     }
   }, [userChats]);
-
   const createChat = useCallback(async (firstId, secondId) => {
     try {
       const response = await postReq(
@@ -78,10 +80,20 @@ export const ChatContextProvider = ({ children, user }) => {
           secondId
         })
       );
-
-      setUserChats((prev)=>[...prev.data , response]);
+  
+      console.log("Create chat response:", JSON.stringify(response, null, 2));
+  
+      const newChat = response.data.data; // The actual chat object is in response.data.data
+  
+      setUserChats((prev) => {
+        if (!prev) return { data: [newChat] };
+        return { ...prev, data: [...(prev.data || []), newChat] };
+      });
+      
+      return newChat;
     } catch (error) {
       console.log("error occurred", error);
+      return null;
     }
   }, []);
 

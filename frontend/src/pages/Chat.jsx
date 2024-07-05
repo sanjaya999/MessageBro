@@ -34,6 +34,7 @@ function Chat() {
       console.log("1st and second are" , firstId , secondId);
       if (firstId && secondId) {
         const newChat = await createChat(firstId, secondId);
+        console.log("New chat created:", JSON.stringify(newChat, null, 2));
         if (newChat) {
           console.log("New chat created:", newChat);
           setSearchResults([]);
@@ -89,11 +90,12 @@ function Chat() {
               <h2>Recent</h2>
             </div>
             {isUserChatLoading && <p>Loading ..</p>}
-            {userChats?.data.map((chat, index) => (
-              <div key={index}>
-                <UserChat chat={chat} user={user} />
-              </div>
-            ))}
+            {}
+            {userChats?.data?.map((chat, index) => (
+  <div key={index}>
+    {chat && chat.members && <UserChat chat={chat} user={user} />}
+  </div>
+))}
           </div>
 
           <div className='message'>
