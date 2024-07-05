@@ -27,25 +27,22 @@ function Chat() {
       setSearchResults([]);
     }
   };
-
   const handleAddUser = async (secondId) => {
-    
-      const firstId = user?.data.user._id;
-      console.log("1st and second are" , firstId , secondId);
-      if (firstId && secondId) {
-        const newChat = await createChat(firstId, secondId);
+    const firstId = user?.data.user._id;
+    console.log("Current user ID:", firstId);
+    console.log("User to add ID:", secondId);
+    if (firstId && secondId) {
+      const newChat = await createChat(firstId, secondId);
+      if (newChat) {
         console.log("New chat created:", JSON.stringify(newChat, null, 2));
-        if (newChat) {
-          console.log("New chat created:", newChat);
-          setSearchResults([]);
-          setSearchInput('');
-        } else {
-          console.log("Failed to create new chat");
-        }
+        setSearchResults([]);
+        setSearchInput('');
       } else {
-        console.error("Missing user IDs for chat creation");
+        console.log("Failed to create new chat");
       }
-    
+    } else {
+      console.error("Missing user IDs for chat creation");
+    }
   };
 
   console.log("this is searchresult", searchResults);
@@ -86,14 +83,13 @@ function Chat() {
               </div>
             )}
 
-            <div className='recent-section'>
-              <h2>Recent</h2>
-            </div>
-            {isUserChatLoading && <p>Loading ..</p>}
-            {}
-            {userChats?.data?.map((chat, index) => (
-  <div key={index}>
-    {chat && chat.members && <UserChat chat={chat} user={user} />}
+<div className='recent-section'>
+  <h2>Recent</h2>
+</div>
+{isUserChatLoading && <p>Loading ..</p>}
+{userChats?.data?.map((chat, index) => (
+  <div key={chat._id || index}>
+    <UserChat chat={chat} user={user} />
   </div>
 ))}
           </div>
