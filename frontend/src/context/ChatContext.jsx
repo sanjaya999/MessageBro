@@ -13,7 +13,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const [messageError, setmessageError] = useState();
 
 console.log("currentchat", currentchat);
-
+console.log("particular chat" , message);
 
   useEffect(() => {
     const getChats = async () => {
@@ -107,11 +107,27 @@ console.log("currentchat", currentchat);
     }
   }, []);
 
+  useEffect(() => {
+    const getMessage = async () => {
+    
+        
+        setmessageError(null);
+        const response = await getReq(
+          `${messageUrl}/getmessage/${currentchat?._id}`
+        );
+        setmessage(response)
+        
 
+       
+    };
+    getMessage();
+  }, [currentchat]);
 
   return (
     <ChatContext.Provider
-      value={{ userChats,updatecurrentchat, createChat, userChatError, isUserChatLoading, thisChat }}
+      value={{ userChats,
+        message,
+        currentchat,updatecurrentchat, createChat, userChatError, isUserChatLoading, thisChat }}
     >
       {children}
     </ChatContext.Provider>
