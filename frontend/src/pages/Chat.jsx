@@ -5,6 +5,7 @@ import { ChatContext } from '../context/ChatContext.jsx'
 import { AuthContext } from "../context/AuthContext.jsx"
 import UserChat from '../components/UserChat.jsx'
 import { postReq, baseUrl } from '../utils/services.js'
+import Chatbox from '../components/Chatbox.jsx'
 
 function Chat() {
   const { user } = useContext(AuthContext)
@@ -96,11 +97,9 @@ function Chat() {
 
           <div className='message'>
             <div className='message-section'>
-              <h2>Message</h2>
+           Message
             </div>
-            <h3>
-             
-            </h3>
+            <Chatbox />
           </div>
         </div>
       </div>
