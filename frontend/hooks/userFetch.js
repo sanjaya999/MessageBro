@@ -22,7 +22,7 @@ export const userFetch = (chat, user) => {
       }
     };
     getUser();
-  }, []); // Changed dependency to recipientId
+  }, [recipientId]); // Changed dependency to recipientId
 
-  return { fetchUser, error };
+  return { fetchUser, recipientId,error };
 };
