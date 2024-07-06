@@ -11,6 +11,7 @@ export const ChatContextProvider = ({ children, user }) => {
   const [currentchat , setcurrentchat] = useState(null)
   const [message, setmessage] = useState();
   const [messageError, setmessageError] = useState();
+  const [newmessage, setnewmessage] = useState(null);
 
 console.log("currentchat", currentchat);
 console.log("particular chat" , message);
@@ -123,11 +124,27 @@ console.log("particular chat" , message);
     getMessage();
   }, [currentchat]);
 
+
+  const sendtext = useCallback(async(textmsg , sender , currentchatid , settextmsg)=>{
+      if(!textmsg)return alert("you must type sth")
+
+      const response =  await postReq(`${messageUrl}/createMessage`,{
+        chatId: currentchatid,
+        text:textmsg,
+        senderId: sender._id
+      })
+      console.log("text sent response " , response)
+      setnewmessage(response)
+
+
+  },[])
+
   return (
     <ChatContext.Provider
       value={{ userChats,
         message,
-        currentchat,updatecurrentchat, createChat, userChatError, isUserChatLoading, thisChat }}
+        currentchat,
+        sendtext,updatecurrentchat, createChat, userChatError, isUserChatLoading, thisChat }}
     >
       {children}
     </ChatContext.Provider>
