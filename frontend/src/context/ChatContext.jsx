@@ -131,7 +131,7 @@ console.log("particular chat" , message);
       const response =  await postReq(`${messageUrl}/createMessage`,{
         chatId: currentchatid,
         text:textmsg,
-        senderId: sender._id
+        senderId: sender
       })
       console.log("text sent response " , response)
       setnewmessage(response)
